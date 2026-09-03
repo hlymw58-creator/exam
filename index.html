@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار فقه البيوع (2)</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --success-color: #10b981;
+            --success-hover: #059669;
+            --danger-color: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        .btn-success:hover {
+            background-color: var(--success-hover);
+        }
+
+        /* Questions Styling */
+        .question-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-color);
+            background: #f0f4ff;
+        }
+
+        input[type="radio"] {
+            accent-color: var(--primary-color);
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Verifying Screen (Loader) */
+        .loader-container {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Results Screen */
+        .result-box {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .score-circle {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Review Section for Mistakes */
+        .review-section {
+            text-align: right;
+            margin-top: 25px;
+            border-top: 2px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .review-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--danger-color);
+            margin-bottom: 15px;
+        }
+
+        .mistake-card {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+
+        .mistake-q {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .mistake-details {
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .wrong-ans {
+            color: var(--danger-color);
+        }
+
+        .correct-ans {
+            color: var(--success-hover);
+            font-weight: 600;
+        }
+
+        .no-mistakes {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: var(--success-hover);
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .actions-container {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- شاشة تسجيل الاسم -->
+        <div id="login-screen" class="screen active">
+            <h2>اختبار مادة الفقه (فقه البيوع)</h2>
+            <p class="subtitle">الرجاء إدخال اسمك الكامل للبدء في الاختبار</p>
+            <div class="form-group">
+                <label for="student-name">اسم الطالب:</label>
+                <input type="text" id="student-name" placeholder="اكتب اسمك هنا..." autocomplete="off">
+            </div>
+            <button class="btn" onclick="startQuiz()">ابدأ الاختبار</button>
+        </div>
+
+        <!-- شاشة الأسئلة -->
+        <div id="quiz-screen" class="screen">
+            <h2>اختبار فقه البيوع</h2>
+            <p class="subtitle" id="welcome-user"></p>
+            
+            <form id="quiz-form">
+                <!-- السؤال 1 -->
+                <div class="question-card" data-q-id="q1" data-q-text="1. ينقسم البيع باعتبار أحكامه إلى أربعة أنواع: صحيح، وفاسد، ولازم، وغير لازم.">
+                    <div class="question-title">1. ينقسم البيع باعتبار أحكامه إلى أربعة أنواع: صحيح، وفاسد، ولازم، وغير لازم.</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q1" value="صح"> صح</label>
+                        <label class="option-label"><input type="radio" name="q1" value="خطأ"> خطأ</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 2 -->
+                <div class="question-card" data-q-id="q2" data-q-text="2. من شروط المبيع أن يكون طاهرًا، فلا يصح بيع النجاسة.">
+                    <div class="question-title">2. من شروط المبيع أن يكون طاهرًا، فلا يصح بيع النجاسة.</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q2" value="صح"> صح</label>
+                        <label class="option-label"><input type="radio" name="q2" value="خطأ"> خطأ</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 3 -->
+                <div class="question-card" data-q-id="q3" data-q-text="3. يصح بيع العين الغائبة عن مجلس العقد إذا كانت حاضرة فيه ولم تُشاهد للعاقدين.">
+                    <div class="question-title">3. يصح بيع العين الغائبة عن مجلس العقد إذا كانت حاضرة فيه ولم تُشاهد للعاقدين.</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q3" value="صح"> صح</label>
+                        <label class="option-label"><input type="radio" name="q3" value="خطأ"> خطأ</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 4 -->
+                <div class="question-card" data-q-id="q4" data-q-text="4. من شروط المبيع أن يكون معلومًا للعاقدين علمًا يرفع الجهالة.">
+                    <div class="question-title">4. من شروط المبيع أن يكون معلومًا للعاقدين علمًا يرفع الجهالة.</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q4" value="صح"> صح</label>
+                        <label class="option-label"><input type="radio" name="q4" value="خطأ"> خطأ</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 5 -->
+                <div class="question-card" data-q-id="q5" data-q-text="5. لا يجوز بيع المتنجس الذي يمكن تطهيره؛ لأنه متنجس.">
+                    <div class="question-title">5. لا يجوز بيع المتنجس الذي يمكن تطهيره؛ لأنه متنجس.</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q5" value="صح"> صح</label>
+                        <label class="option-label"><input type="radio" name="q5" value="خطأ"> خطأ</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 6 -->
+                <div class="question-card" data-q-id="q6" data-q-text="6. أيُّ مما يلي يُعد من أنواع البيع المذكورة في الدرس؟">
+                    <div class="question-title">6. أيُّ مما يلي يُعد من أنواع البيع المذكورة في الدرس؟</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q6" value="أ"> أ) بيع عين مشاهدة</label>
+                        <label class="option-label"><input type="radio" name="q6" value="ب"> ب) بيع مجهول</label>
+                        <label class="option-label"><input type="radio" name="q6" value="ج"> ج) بيع النجاسة</label>
+                        <label class="option-label"><input type="radio" name="q6" value="د"> د) بيع المعدوم</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 7 -->
+                <div class="question-card" data-q-id="q7" data-q-text="7. من شروط المبيع أن يكون:">
+                    <div class="question-title">7. من شروط المبيع أن يكون:</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q7" value="أ"> أ) غير معلوم للعاقدين</label>
+                        <label class="option-label"><input type="radio" name="q7" value="ب"> ب) مملوكًا للعاقِد</label>
+                        <label class="option-label"><input type="radio" name="q7" value="ج"> ج) غير مقدور على تسليمه</label>
+                        <label class="option-label"><input type="radio" name="q7" value="د"> د) نجسًا</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 8 -->
+                <div class="question-card" data-q-id="q8" data-q-text="8. ما حكم بيع الدهن والزيت المتنجسين؟">
+                    <div class="question-title">8. ما حكم بيع الدهن والزيت المتنجسين؟</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q8" value="أ"> أ) يصح إذا أمكن تطهيرهما</label>
+                        <label class="option-label"><input type="radio" name="q8" value="ب"> ب) لا يصح مطلقًا</label>
+                        <label class="option-label"><input type="radio" name="q8" value="ج"> ج) يجب بيعهما</label>
+                        <label class="option-label"><input type="radio" name="q8" value="د"> د) يحرم تطهيرهما</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 9 -->
+                <div class="question-card" data-q-id="q9" data-q-text="9. ما حكم بيع الثوب المتنجس الذي يمكن تطهيره؟">
+                    <div class="question-title">9. ما حكم بيع الثوب المتنجس الذي يمكن تطهيره؟</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q9" value="أ"> أ) لا يصح</label>
+                        <label class="option-label"><input type="radio" name="q9" value="ب"> ب) يصح لإمكان تطهيره</label>
+                        <label class="option-label"><input type="radio" name="q9" value="ج"> ج) يحرم تطهيره</label>
+                        <label class="option-label"><input type="radio" name="q9" value="د"> د) لا يجوز الانتفاع به</label>
+                    </div>
+                </div>
+
+                <!-- السؤال 10 -->
+                <div class="question-card" data-q-id="q10" data-q-text="10. أيُّ مما يلي يُعد من شروط المبيع؟">
+                    <div class="question-title">10. أيُّ مما يلي يُعد من شروط المبيع؟</div>
+                    <div class="options-grid">
+                        <label class="option-label"><input type="radio" name="q10" value="أ"> أ) أن يكون مجهولًا</label>
+                        <label class="option-label"><input type="radio" name="q10" value="ب"> ب) أن يكون معلومًا للعاقدين علمًا يرفع الجهالة</label>
+                        <label class="option-label"><input type="radio" name="q10" value="ج"> ج) ألا يكون مقدورًا على تسليمه</label>
+                        <label class="option-label"><input type="radio" name="q10" value="د"> د) ألا يكون مملوكًا</label>
+                    </div>
+                </div>
+
+                <button type="button" class="btn" onclick="submitQuiz()">إرسال وإنهاء الاختبار</button>
+            </form>
+        </div>
+
+        <!-- شاشة التحقق الانتقالية -->
+        <div id="loading-screen" class="screen">
+            <div class="loader-container">
+                <div class="spinner"></div>
+                <h2>جاري تصحيح الاختبار وحساب النتيجة...</h2>
+                <p class="subtitle">يرجى الانتظار ثوانٍ معدودة</p>
+            </div>
+        </div>
+
+        <!-- شاشة النتيجة النهائية -->
+        <div id="result-screen" class="screen">
+            <div class="result-box">
+                <h2>نتيجة الاختبار</h2>
+                <p id="result-name" style="font-weight: 600; font-size: 1.1rem; color: #475569;"></p>
+                <div class="score-circle" id="score-display">0%</div>
+                <div class="result-message" id="result-message"></div>
+                
+                <!-- قسم مراجعة الأخطاء -->
+                <div id="mistakes-container"></div>
+
+                <div class="actions-container" id="actions-container">
+                    <!-- سيتم إضافة الزر المناسب هنا ديناميكياً -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let studentName = "";
+
+        function startQuiz() {
+            const nameInput = document.getElementById("student-name").value.trim();
+            if (nameInput === "") {
+                alert("الرجاء إدخال اسم الطالب قبل المتابعة.");
+                return;
+            }
+            studentName = nameInput;
+            document.getElementById("welcome-user").innerText = `أهلاً بك، ${studentName}! أجب عن الأسئلة التالية بدقة:`;
+            
+            document.getElementById("login-screen").classList.remove("active");
+            document.getElementById("quiz-screen").classList.add("active");
+        }
+
+        function submitQuiz() {
+            // التحقق من الإجابة على جميع الأسئلة
+            const totalQuestions = 10;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const radios = document.getElementsByName(`q${i}`);
+                let answered = false;
+                for (let r of radios) {
+                    if (r.checked) {
+                        answered = true;
+                        break;
+                    }
+                }
+                if (!answered) {
+                    alert(`يرجى الإجابة على السؤال رقم ${i} قبل الإرسال.`);
+                    return;
+                }
+            }
+
+            // الانتقال لشاشة التحقق
+            document.getElementById("quiz-screen").classList.remove("active");
+            document.getElementById("loading-screen").classList.add("active");
+
+            // محاكاة وقت المعالجة (2.5 ثانية)
+            setTimeout(() => {
+                calculateResults();
+            }, 2500);
+        }
+
+        function calculateResults() {
+            // الإجابات الصحيحة ونصوصها الكاملة لتوضيحها للمستخدم
+            const correctAnswersData = {
+                q1: { ans: "صح", text: "صح" },
+                q2: { ans: "صح", text: "صح" },
+                q3: { ans: "خطأ", text: "خطأ" },
+                q4: { ans: "صح", text: "صح" },
+                q5: { ans: "خطأ", text: "خطأ" },
+                q6: { ans: "أ", text: "أ) بيع عين مشاهدة" },
+                q7: { ans: "ب", text: "ب) مملوكًا للعاقِد" },
+                q8: { ans: "أ", text: "أ) يصح إذا أمكن تطهيرهما" },
+                q9: { ans: "ب", text: "ب) يصح لإمكان تطهيره" },
+                q10: { ans: "ب", text: "ب) أن يكون معلومًا للعاقدين علمًا يرفع الجهالة" }
+            };
+
+            let score = 0;
+            const total = 10;
+            let mistakesHTML = "";
+            let mistakesCount = 0;
+
+            for (let i = 1; i <= total; i++) {
+                const qKey = `q${i}`;
+                const radios = document.getElementsByName(qKey);
+                let studentChoice = "";
+                
+                for (let r of radios) {
+                    if (r.checked) {
+                        studentChoice = r.value;
+                        break;
+                    }
+                }
+
+                // جلب نص السؤال من بطاقة السؤال
+                const card = document.querySelector(`[data-q-id="${qKey}"]`);
+                const qText = card ? card.getAttribute("data-q-text") : `السؤال ${i}`;
+
+                // البحث عن النص المرتبط بالاختيار الذي اختاره الطالب (لعرضه بشكل أوضح)
+                let studentChoiceFullText = studentChoice;
+                if (card) {
+                    const selectedRadioInput = card.querySelector(`input[value="${studentChoice}"]`);
+                    if (selectedRadioInput) {
+                        studentChoiceFullText = selectedRadioInput.parentElement.innerText.trim();
+                    }
+                }
+
+                if (studentChoice === correctAnswersData[qKey].ans) {
+                    score++;
+                } else {
+                    mistakesCount++;
+                    mistakesHTML += `
+                        <div class="mistake-card">
+                            <div class="mistake-q">${qText}</div>
+                            <div class="mistake-details">
+                                <span class="wrong-ans">❌ إجابتك: ${studentChoiceFullText}</span>
+                                <span class="correct-ans">✅ الإجابة الصحيحة: ${correctAnswersData[qKey].text}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            const percentage = (score / total) * 100;
+
+            // إخفاء شاشة التحقق وإظهار شاشة النتيجة
+            document.getElementById("loading-screen").classList.remove("active");
+            document.getElementById("result-screen").classList.add("active");
+
+            document.getElementById("result-name").innerText = `الطالب: ${studentName}`;
+            document.getElementById("score-display").innerText = `${percentage}%`;
+            
+            const messageEl = document.getElementById("result-message");
+            const mistakesContainer = document.getElementById("mistakes-container");
+            const actionsContainer = document.getElementById("actions-container");
+
+            // عرض الأخطاء أو رسالة التميز إذا لم يخطئ في شيء
+            if (mistakesCount === 0) {
+                mistakesContainer.innerHTML = `
+                    <div class="no-mistakes">
+                        🌟 ممتاز يا بطل! لقد أجبت عن جميع الأسئلة بشكل صحيح تماماً دون أي أخطاء!
+                    </div>
+                `;
+            } else {
+                mistakesContainer.innerHTML = `
+                    <div class="review-section">
+                        <div class="review-title">📝 مراجعة الأسئلة التي أخطأت فيها:</div>
+                        ${mistakesHTML}
+                    </div>
+                `;
+            }
+
+            // شرط النجاح (50% فأكثر)
+            if (percentage >= 50) {
+                messageEl.innerText = "🎉 مبروك! لقد اجتزت الاختبار بنجاح.";
+                messageEl.style.color = "var(--success-color)";
+                
+                // زر الدخول للمحاضرة على Google Drive
+                actionsContainer.innerHTML = `
+                    <a href="https://drive.google.com/file/d/1ApGtlqrh5-XRCj7YtxzusZleuT99SKiP/view?usp=drive_link" target="_blank" class="btn btn-success">
+                        دخول المحاضرة على 🚀
+                    </a>
+                `;
+            } else {
+                messageEl.innerText = "❌ للأسف، لم تصل لنسبة النجاح المطلوبة.";
+                messageEl.style.color = "var(--danger-color)";
+                
+                // زر إعادة المحاولة
+                actionsContainer.innerHTML = `
+                    <button class="btn" onclick="location.reload()">إعادة المحاولة 🔄</button>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
